@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//Dto Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.tmovie.mybatis.mapper.SearchCinemainfomation">
+
+	<select id="selectTheaterInfo"
+		resultType="jp.co.tmovie.dto.SearchCinemaInformationDTO">
+		SELECT
+		THEATER_INFO.theater_nm as theaterNm,
+		SHOWING_MNG.movie_start_dt
+		as movieStartDt,
+		SCREEN_INFO.screen_nm as screenNm,
+		SHOWING_MNG.movie_start_tm as movieStartTm,
+		MOVIE_INFO.movie_nm as
+		movieNm
+		FROM
+		SHOWING_MNG
+		JOIN THEATER_INFO ON SHOWING_MNG.theater_id =
+		THEATER_INFO.theater_id
+		JOIN SCREEN_INFO ON SHOWING_MNG.screen_id =
+		SCREEN_INFO.screen_id
+		JOIN MOVIE_INFO ON SHOWING_MNG.movie_id =
+		MOVIE_INFO.movie_id
+		WHERE THEATER_INFO.theater_id = #{searchID}
+		<!-- システム日付を条件とするとhitしないためコメントアウト --> 
+		<!-- AND SHOWING_MNG.movie_start_dt = CURRENT_DATE -->
+		AND SHOWING_MNG.movie_start_tm >= CURRENT_TIMESTAMP
+		ORDER BY screen_nm,
+		movie_start_tm, movie_nm;
+		</select>
+</mapper>
