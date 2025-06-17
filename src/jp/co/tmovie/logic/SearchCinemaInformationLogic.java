@@ -2,6 +2,7 @@ package jp.co.tmovie.logic;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -47,41 +48,50 @@ public class SearchCinemaInformationLogic {
 		//劇場IDを取得
 		String theaterId = scanner.nextLine();
 
-		/*
-		 * 劇場IDを送ってDBで検索
-		 */
-		//DAOのインスタンス作成
-		//		SearchCinemaInformationDAO dao = new SearchCinemaInformationDAOImpl();
+		//入力値をカンマ区切り
+		String[] theaterIdArr = theaterId.split(".");
 
-		//上映スケジュールを取得
-		//		List<SearchCinemaInformationDTO> seachCinemaInfoDtoList = dao.searchCinemaInformation(theaterId);
+		//trimしてListに格納
+		List<String> theaterIdList = new ArrayList<>();
+		for (String tmpStr : theaterIdArr) {
+			theaterIdList.add(tmpStr.trim());
 
-		// SqlSessionからMapperを取得
-		SearchCinemainfomation mapper = MybatisDataBaseManager.getSession().getMapper(SearchCinemainfomation.class);
+			/*
+			 * 劇場IDを送ってDBで検索
+			 */
+			//DAOのインスタンス作成
+			//		SearchCinemaInformationDAO dao = new SearchCinemaInformationDAOImpl();
 
-		// 映画情報の取得
-		List<SearchCinemaInformationDTO> seachCinemaInfoDtoList = mapper.selectTheaterInfo(theaterId);
+			//上映スケジュールを取得
+			//		List<SearchCinemaInformationDTO> seachCinemaInfoDtoList = dao.searchCinemaInformation(theaterId);
 
-		//上映スケジュールを取得できたかをチェック
-		if (seachCinemaInfoDtoList.isEmpty()) {
-			System.out.println("該当する上映スケジュールはありません。");
-		} else {
-			//上映スケジュール表示
-			//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/mm/dd");
-			System.out.println("--- 検索結果 ---");
-			System.out.println("**************************\r\n"
-					+ "《上映スケジュール》\r\n"
-					+ "  " + seachCinemaInfoDtoList.get(0).getTheaterNm()
-					//		+ dateFormat.format(
-					+ "   " + seachCinemaInfoDtoList.get(0).getMovieStartDt().replace("-", "/")
-					+ "\r\n"
-					+ "\r\n"
-					+ "  スクリーン名 " + "   上映開始時間  " + "                     映画名 ");
-			for (SearchCinemaInformationDTO info : seachCinemaInfoDtoList) {
-				String dispMessage = "   " + info.getScreenNm() + "   | "
-						+ "   " + info.getMovieStartTm() + "   | "
-						+ "   " + info.getMovieNm();
-				System.out.println(dispMessage);
+			// SqlSessionからMapperを取得
+			SearchCinemainfomation mapper = MybatisDataBaseManager.getSession().getMapper(SearchCinemainfomation.class);
+
+			// 映画情報の取得
+			List<SearchCinemaInformationDTO> seachCinemaInfoDtoList = mapper.selectTheaterInfo(theaterIdList);
+
+			//上映スケジュールを取得できたかをチェック
+			if (seachCinemaInfoDtoList.isEmpty()) {
+				System.out.println("該当する上映スケジュールはありません。");
+			} else {
+				//上映スケジュール表示
+				//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/mm/dd");
+				System.out.println("--- 検索結果 ---");
+				System.out.println("**************************\r\n"
+						+ "《上映スケジュール》\r\n"
+						+ "  " + seachCinemaInfoDtoList.get(0).getTheaterNm()
+						//		+ dateFormat.format(
+						+ "   " + seachCinemaInfoDtoList.get(0).getMovieStartDt().replace("-", "/")
+						+ "\r\n"
+						+ "\r\n"
+						+ "  スクリーン名 " + "   上映開始時間  " + "                     映画名 ");
+				for (SearchCinemaInformationDTO info : seachCinemaInfoDtoList) {
+					String dispMessage = "   " + info.getScreenNm() + "   | "
+							+ "   " + info.getMovieStartTm() + "   | "
+							+ "   " + info.getMovieNm();
+					System.out.println(dispMessage);
+				}
 			}
 		}
 

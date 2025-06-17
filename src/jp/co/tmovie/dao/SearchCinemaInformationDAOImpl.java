@@ -49,6 +49,7 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 					+ " INNER JOIN movie_info"
 					+ " ON showing_mng.movie_id = movie_info.movie_id"
 					+ " WHERE THEATER_INFO.theater_id = ?"
+					// システム日付を条件とするとhitしないためコメントアウト
 					//+ " AND SHOWING_MNG.movie_start_dt = CURRENT_DATE"
 					+ " AND SHOWING_MNG.movie_start_tm >= CURRENT_TIMESTAMP"
 					+ " ORDER BY screen_nm ASC,"
@@ -80,19 +81,17 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 
 		return SearchCinemaInformationDtoList;
 	}
-	
-	
+
 	@Override // オーバーライドしたメソッドであることを明示するアノテーション
 	public List<SearchCinemaInformationDTO> CinemaInformation() {
-		
+
 		DataBaseManager dbManager = DataBaseManager.getInstance();
 		// DBコネクションを取得する
 		Connection dbConnection = dbManager.getConnection();
 
 		// 検索結果を格納する
 		List<SearchCinemaInformationDTO> CinemaInformationDtoList = new ArrayList<SearchCinemaInformationDTO>();
-		
-		
+
 		try {
 			// 上映情報を取得するSQL
 			String sql = "SELECT DISTINCT"
@@ -105,7 +104,7 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 					+ " ON showing_mng.screen_id = screen_info.screen_id"
 					+ " INNER JOIN movie_info"
 					+ " ON showing_mng.movie_id = movie_info.movie_id"
-					+ " WHERE SHOWING_MNG.movie_start_dt = CURRENT_DATE"
+					//+ " WHERE SHOWING_MNG.movie_start_dt = CURRENT_DATE"
 					//+ " AND SHOWING_MNG.movie_start_tm >= CURRENT_TIMESTAMP"
 					+ " ORDER BY theater_info.theater_id";
 
@@ -114,7 +113,7 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 
 			// SQLを実行する
 			ResultSet result = statement.executeQuery();
-			
+
 			//resultをSearchCinemaInformationDtoListに格納
 			while (result.next()) {
 				SearchCinemaInformationDTO dto = new SearchCinemaInformationDTO();
@@ -122,15 +121,14 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 				dto.setTheaterId(result.getString("theater_id"));
 				CinemaInformationDtoList.add(dto);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return CinemaInformationDtoList;
 	}
-	
-	
-	public List<SearchCinemaInformationDTO> countChinema(String theaterId){
+
+	public List<SearchCinemaInformationDTO> countChinema(String theaterId) {
 		DataBaseManager dbManager = DataBaseManager.getInstance();
 		// DBコネクションを取得する
 		Connection dbConnection = dbManager.getConnection();
@@ -152,11 +150,11 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 					+ " INNER JOIN movie_info"
 					+ " ON showing_mng.movie_id = movie_info.movie_id"
 					+ " WHERE THEATER_INFO.theater_id = ?"
-//					+ " AND SHOWING_MNG.movie_start_dt = CURRENT_DATE"
-//					+ " AND SHOWING_MNG.movie_start_tm >= CURRENT_TIMESTAMP"
+					//					+ " AND SHOWING_MNG.movie_start_dt = CURRENT_DATE"
+					//					+ " AND SHOWING_MNG.movie_start_tm >= CURRENT_TIMESTAMP"
 					+ " GROUP BY movie_nm"
 					+ " ORDER BY THEATER_INFO.theater_id ASC;";
-					
+
 			// SQLのインスタンスを生成する
 			PreparedStatement statement = dbConnection.prepareStatement(sql);
 
@@ -177,7 +175,7 @@ public class SearchCinemaInformationDAOImpl implements SearchCinemaInformationDA
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return countMovieDtoList;
 	}
 }

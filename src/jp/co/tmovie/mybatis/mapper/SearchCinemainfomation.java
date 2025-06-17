@@ -15,6 +15,6 @@ public interface SearchCinemainfomation {
 	 * @param searchID　劇場IDを取得する
 	 * @return 劇場情報
 	 */
-	public List<SearchCinemaInformationDTO> selectTheaterInfo(String searchID);
+	public List<SearchCinemaInformationDTO> selectTheaterInfo(List<String> theaterIdList);
 
 }

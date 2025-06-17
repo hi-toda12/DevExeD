@@ -6,10 +6,9 @@ import jp.co.tmovie.dto.SearchCinemaInformationDTO;
 
 /**
  * DAOのinterface
+ * @author hi-toda
  */
-
 public interface SearchCinemaInformationDAO {
-	
 	/**
 	 * 上映スケジュール検索
 	 * @param theaterId 劇場ID
